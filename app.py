@@ -1,11 +1,13 @@
 import streamlit as st
 from fpdf import FPDF
+from PIL import Image
 
 st.set_page_config(
     page_title="PDF Converter",
     page_icon="✨",
     layout="wide",
 )
+
 
 def convertTextToPdf(text, filename):
     pdfobj = FPDF()
@@ -14,12 +16,14 @@ def convertTextToPdf(text, filename):
     pdfobj.multi_cell(0, 10, text)
     pdfobj.output(filename)
 
-# Custom CSS to hide the sidebar
+
+def convertImageToPdf(image, output_pdf):
+    img = Image.open(image)
+    img.save(output_pdf, "PDF", resolution=100.0)
+
+
 st.markdown("""
     <style>
-    [data-testid="stSidebar"] {
-        display: none; /* Hide the sidebar */
-    }
     [data-testid="stAppViewContainer"] {
         background: linear-gradient(to bottom, lightblue 95%, red 5%);
         height: 100vh; /* Full viewport height */
@@ -36,17 +40,33 @@ st.markdown("<h1 style='text-align: center;'>PDF Convertor</h1>", unsafe_allow_h
 uploaded_file = st.file_uploader("Choose a file", label_visibility="collapsed")
 
 if uploaded_file is not None:
-    content = uploaded_file.read().decode("utf-8")
-    if st.button("Convert to PDF"):
-        outputPdf = "converted_file.pdf"
-        convertTextToPdf(content, outputPdf)
-        with open(outputPdf, "rb") as f:
-            st.download_button(
-                label="Download PDF",
-                data=f,
-                file_name="converted_file.pdf",
-                mime="application/pdf",
-            )
+    # Handle text files
+    if uploaded_file.type == "text/plain":
+        content = uploaded_file.read().decode("utf-8")
+        if st.button("Convert to PDF"):
+            outputPdf = "converted_file.pdf"
+            convertTextToPdf(content, outputPdf)
+            with open(outputPdf, "rb") as f:
+                st.download_button(
+                    label="Download PDF",
+                    data=f,
+                    file_name="converted_file.pdf",
+                    mime="application/pdf",
+                )
+
+    # Handle image files
+    elif uploaded_file.type in ["image/jpeg", "image/png", "image/jpg"]:
+        if st.button("Convert Image to PDF"):
+            outputPdf = "converted_image.pdf"
+            convertImageToPdf(uploaded_file, outputPdf)
+            with open(outputPdf, "rb") as f:
+                st.download_button(
+                    label="Download Image as PDF",
+                    data=f,
+                    file_name="converted_image.pdf",
+                    mime="application/pdf",
+                )
+
 st.markdown("<hr style='border: 1px solid #000; width: 80%; margin: 20px auto;'>", unsafe_allow_html=True)
 
 st.markdown("""
@@ -78,11 +98,12 @@ st.markdown("""
          .card-container {
             display: flex;
             justify-content: space-around;
-            margin-top: 30px;
+            margin-top: 70px;
             gap: 20px;
         }
         .card {
             width: 250px;
+            height: 200;
             border: 1px solid #ddd;
             border-radius: 8px;
             box-shadow: 0px 4px 12px rgba(0, 0, 255, 0.2); /* Blue shadow */
