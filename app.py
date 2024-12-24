@@ -2,15 +2,10 @@ import streamlit as st
 from fpdf import FPDF
 
 st.set_page_config(
-    page_title="PDF Convertor",
+    page_title="PDF Converter",
     page_icon="✨",
     layout="wide",
-    initial_sidebar_state="expanded",
 )
-
-st.sidebar.title("Choose Your File Type")
-
-
 
 def convertTextToPdf(text, filename):
     pdfobj = FPDF()
@@ -19,14 +14,24 @@ def convertTextToPdf(text, filename):
     pdfobj.multi_cell(0, 10, text)
     pdfobj.output(filename)
 
+# Custom CSS to hide the sidebar
 st.markdown("""
     <style>
+    [data-testid="stSidebar"] {
+        display: none; /* Hide the sidebar */
+    }
     [data-testid="stAppViewContainer"] {
-        background-color: lightblue;
+        background: linear-gradient(to bottom, lightblue 95%, red 5%);
+        height: 100vh; /* Full viewport height */
+        padding: 0;
+        margin: 0;
     }
     </style>
+    
+    
     """, unsafe_allow_html=True)
-st.title("Upload Your File and Effortlessly Convert It to PDF")
+
+st.markdown("<h1 style='text-align: center;'>PDF Convertor</h1>", unsafe_allow_html=True)
 
 uploaded_file = st.file_uploader("Choose a file", label_visibility="collapsed")
 
@@ -42,63 +47,73 @@ if uploaded_file is not None:
                 file_name="converted_file.pdf",
                 mime="application/pdf",
             )
+st.markdown("<hr style='border: 1px solid #000; width: 80%; margin: 20px auto;'>", unsafe_allow_html=True)
 
+st.markdown("""
+    <style>
+        .info-box {
+            border: 2px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            text-align: center;
+            font-size: 16px;
+            color: #333;
+            margin-top: 20px;
+        }
+        .info-box p {
+            margin: 10px 0;
+        }
+    </style>
+    <div class="info-box">
+        <p>✅Convert to and from PDF on Mac, Windows, and mobile</p>
+        <p>✅Free, no-hassle PDF Converter</p>
+        <p>✅30+ PDF tools trusted by 1 billion people</p>
+    </div>
+ 
+""", unsafe_allow_html=True)
 
+st.markdown("""
+    <style>
+         .card-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            gap: 20px;
+        }
+        .card {
+            width: 250px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 255, 0.2); /* Blue shadow */
+            padding: 20px;
+            background-color: #e6f0ff; /* Light blue background */
+            text-align: center;
+        }
+        .card h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: #007bff; /* Blue text color */
+        }
+        .card p {
+            font-size: 14px;
+            color: #333;
+        }
+    </style>
 
-
-
-# st.markdown("""
-#     <style>
-#     .card-container {
-#         display: flex;
-#         flex-wrap: wrap;
-#         gap: 20px;
-#         justify-content: center;
-#         padding: 20px;
-#     }
-#     .card {
-#         background-color: white;
-#         border-radius: 10px;
-#         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-#         padding: 20px;
-#         width: 300px;
-#         text-align: center;
-#     }
-#     .card h3 {
-#         margin: 0;
-#         color: #333;
-#     }
-#     .card p {
-#         color: #666;
-#     }
-#     .card button {
-#         background-color: #007bff;
-#         color: white;
-#         border: none;
-#         padding: 10px 20px;
-#         border-radius: 5px;
-#         cursor: pointer;
-#     }
-#     .card button:hover {
-#         background-color: #0056b3;
-#     }
-#     </style>
-#     """, unsafe_allow_html=True)
-#
-# # Add cards
-# st.markdown("""
-#     <div class="card-container">
-#         <div class="card">
-#             <h3>Card 1</h3>
-#             <p>Please click the card to convert image into PDF</p>
-#             <button>Click Here</button>
-#         </div>
-#         <div class="card">
-#             <h3>Card 2</h3>
-#             <p>Please click the card to convert file into PDF.</p>
-#             <button>Click Here</button>
-#         </div>
-#     </div>
-#     """, unsafe_allow_html=True)
-
-
+     <!-- Card container -->
+    <div class="card-container">
+        <div class="card">
+            <h3>Easy Conversion</h3>
+            <p>Convert PDFs quickly and easily without installation.</p>
+        </div>
+        <div class="card">
+            <h3>Secure Processing</h3>
+            <p>Your data is safe with us—secure file handling and processing.</p>
+        </div>
+        <div class="card">
+            <h3>Fast Results</h3>
+            <p>Get your files converted instantly with no delays.</p>
+        </div>
+    </div>
+""", unsafe_allow_html=True)
