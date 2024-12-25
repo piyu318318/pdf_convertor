@@ -1,6 +1,12 @@
 import streamlit as st
 from fpdf import FPDF
 from PIL import Image
+from datetime import datetime
+import os
+
+
+todaysDate = datetime.now().strftime("%Y-%m-%d-%H_%M_%S")
+
 
 st.set_page_config(
     page_title="PDF Converter",
@@ -25,7 +31,7 @@ def convertImageToPdf(image, output_pdf):
 st.markdown("""
     <style>
     [data-testid="stAppViewContainer"] {
-        background: linear-gradient(to bottom, lightblue 95%, red 5%);
+        background: linear-gradient(to bottom, red 5%, lightblue 95%);
         height: 100vh; /* Full viewport height */
         padding: 0;
         margin: 0;
@@ -35,35 +41,38 @@ st.markdown("""
     
     """, unsafe_allow_html=True)
 
-st.markdown("<h1 style='text-align: center;'>PDF Convertor</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: lightblue;'>PDF Convertor</h1>", unsafe_allow_html=True)
 
-uploaded_file = st.file_uploader("Choose a file", label_visibility="collapsed")
+uploadedFile = st.file_uploader("Choose a file", label_visibility="collapsed")
+filename = "convertedpdf" + todaysDate + ".pdf"
+outputDirName = "convertedpdfs"
+os.makedirs(outputDirName, exist_ok=True)
 
-if uploaded_file is not None:
+if uploadedFile is not None:
     # Handle text files
-    if uploaded_file.type == "text/plain":
-        content = uploaded_file.read().decode("utf-8")
+    if uploadedFile.type == "text/plain":
+        content = uploadedFile.read().decode("utf-8")
         if st.button("Convert to PDF"):
-            outputPdf = "converted_file.pdf"
+            outputPdf = os.path.join(outputDirName, filename)
             convertTextToPdf(content, outputPdf)
             with open(outputPdf, "rb") as f:
                 st.download_button(
                     label="Download PDF",
                     data=f,
-                    file_name="converted_file.pdf",
+                    file_name=filename,
                     mime="application/pdf",
                 )
 
     # Handle image files
-    elif uploaded_file.type in ["image/jpeg", "image/png", "image/jpg"]:
+    elif uploadedFile.type in ["image/jpeg", "image/png", "image/jpg"]:
         if st.button("Convert Image to PDF"):
-            outputPdf = "converted_image.pdf"
-            convertImageToPdf(uploaded_file, outputPdf)
+            outputPdf = os.path.join(outputDirName, filename)
+            convertImageToPdf(uploadedFile, outputPdf)
             with open(outputPdf, "rb") as f:
                 st.download_button(
                     label="Download Image as PDF",
                     data=f,
-                    file_name="converted_image.pdf",
+                    file_name=filename,
                     mime="application/pdf",
                 )
 
