@@ -3,7 +3,7 @@ Powered by Python Libraries like FPDF and Pillow for Optimal File Handling
 
 Use Following Steps
 1. git clone https://github.com/piyu318318/pdf_convertor.git
-2.cd pdf_convertor
+2. cd pdf_convertor
 3. pip install -r requirements.txt
 4. streamlit run app.py
 
